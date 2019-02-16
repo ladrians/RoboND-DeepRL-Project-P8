@@ -43,6 +43,8 @@
 #define BATCH_SIZE 8
 #define USE_LSTM false
 #define LSTM_SIZE 32
+#define NUM_CHANNELS 3
+#define NUM_ACTIONS 2
 
 /*
 / TODO - Define Reward Parameters
@@ -70,6 +72,10 @@
 
 // Lock base rotation DOF (Add dof in header file if off)
 #define LOCKBASE true
+
+// Extra parameters
+#define IMAGE_TOPIC "/gazebo/arm_world/camera/link/camera/image"
+#define COLLISION_TOPIC "/gazebo/arm_world/tube/tube_link/my_contact"
 
 
 namespace gazebo
@@ -134,22 +140,17 @@ void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 	cameraNode->Init();
 	
 	/*
-	/ TODO - Subscribe to camera topic
-	/
+	/ Subscribe to camera topic
 	*/
-	
-	//cameraSub = None;
+	cameraSub = cameraNode->Subscribe(IMAGE_TOPIC, &ArmPlugin::onCameraMsg, this);
 
 	// Create our node for collision detection
 	collisionNode->Init();
 		
 	/*
 	/ TODO - Subscribe to prop collision topic
-	/
 	*/
-	
-	//collisionSub = None;
-
+	collisionSub = collisionNode->Subscribe(COLLISION_TOPIC, &ArmPlugin::onCollisionMsg, this);
 	// Listen to the update event. This event is broadcast every simulation iteration.
 	this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&ArmPlugin::OnUpdate, this, _1));
 }
@@ -164,10 +165,12 @@ bool ArmPlugin::createAgent()
 			
 	/*
 	/ TODO - Create DQN Agent
-	/
-	*/
-	
-	agent = NULL;
+	*/	
+    agent = dqnAgent::Create(INPUT_WIDTH, INPUT_HEIGHT, 
+                       NUM_CHANNELS, NUM_ACTIONS, OPTIMIZER, 
+                       LEARNING_RATE, REPLAY_MEMORY, BATCH_SIZE, 
+                       GAMMA, EPS_START, EPS_END, EPS_DECAY,
+                       USE_LSTM, LSTM_SIZE, ALLOW_RANDOM, DEBUG_DQN);	
 
 	if( !agent )
 	{
