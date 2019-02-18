@@ -22,6 +22,8 @@ The term `trial and error` search and `delayed reward` are the two most importan
 
 Reinforcement learning can be understood using the concepts of agents, environments, states, actions and rewards.
 
+![Reinforcement learning](data/rl01.png)
+
  * An `agent` takes actions. The algorithm is the agent. In life, the agent is you.
  * `Action` is the set of all possible moves the agent can make.
  * The `discount factor` is multiplied by future rewards as discovered by the agent in order to dampen these rewards effect on the agents choice of action; to make future rewards worth less than immediate ones.
@@ -87,4 +89,4 @@ fatal error: THC/THC.h: No such file or directory
  * [This repository](https://github.com/ladrians/RoboND-DeepRL-Project-P8)
  * [Project Rubric](https://review.udacity.com/#!/rubrics/1439/view)
  * [A Beginner's Guide to Deep Reinforcement Learning](https://skymind.ai/wiki/deep-reinforcement-learning)
- * [https://devblogs.nvidia.com/deep-learning-nutshell-reinforcement-learning/|Deep Learning in a Nutshell: Reinforcement Learning]
+ * [https://devblogs.nvidia.com/deep-learning-nutshell-reinforcement-learning/](Deep Learning in a Nutshell: Reinforcement Learning)
