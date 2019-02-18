@@ -89,4 +89,4 @@ fatal error: THC/THC.h: No such file or directory
  * [This repository](https://github.com/ladrians/RoboND-DeepRL-Project-P8)
  * [Project Rubric](https://review.udacity.com/#!/rubrics/1439/view)
  * [A Beginner's Guide to Deep Reinforcement Learning](https://skymind.ai/wiki/deep-reinforcement-learning)
- * [https://devblogs.nvidia.com/deep-learning-nutshell-reinforcement-learning/](Deep Learning in a Nutshell: Reinforcement Learning)
+ * [Deep Learning in a Nutshell: Reinforcement Learning](https://devblogs.nvidia.com/deep-learning-nutshell-reinforcement-learning/)
