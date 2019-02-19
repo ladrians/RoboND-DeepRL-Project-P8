@@ -36,18 +36,11 @@ Where do neural networks fit in? Neural networks are the agent that learns to ma
 
 In many scenarios, the state space is significantly complex and multi-dimensional to where neural networks are increasingly used to predict the best action, which is where deep reinforcement learning and GPU acceleration comes into play. With deep reinforcement learning, the agents are typically processing 2D imagery using convolutional neural networks (CNNs), processing inputs that are an order of magnitude more complex than low-dimensional RL, and have the ability to learn "from vision" with the end-to-end network (referred to as "pixels-to-actions").
 
-This project was entirely resolved using Udacity's workspace and the pytorch framework with [openAI gym environment](https://blog.openai.com/openai-gym-beta/) to verify that the deep reinforcement learning algorithms are indeed learning.
+This project was entirely resolved using Udacity's workspace and the pytorch framework with [openAI gym environment](https://blog.openai.com/openai-gym-beta/) to verify that the deep reinforcement learning algorithms are indeed learning. The [gazebo-arm.world](gazebo/gazebo-arm.world) include three main components which define the environment:
 
  * The robotic arm with a gripper attached to it.
  * A camera sensor, to capture images to feed into the DQN.
  * A cylindrical object.
-
-Two actions are associated to each joint to increase or decrease the joints angular velocity. The RGB camera is strategically located so as to capture the robot arm and the goal cylinder object. There are two possible ways to control the arm joints:
-
- * Velocity Control
- * Position Control
-
-For both of these types of control, it is possible to increase or decrease either the joint velocity or the joint position, by a small delta value.
 
 The objective is to teach a robotic arm to carry out two primary objectives:
 
@@ -58,17 +51,61 @@ A DQN agent and reward functions were created to solve the case.
 
 ### Agent Behavior
 
-For this case the Agent is a `dqnAgent` which is instanciated on the simulation. The user provides their sensor data (in this case data from a camera) and environmental state, to the `NextAction()` function, which calls the Python script and returns the predicted action, which the user then applies to robot on the Gazebo simulation.
+For this case the Agent is a `dqnAgent` which is instanciated on the simulation. The DQN agent is discrete so the network selects one output for every frame. This output (action value) can then be mapped to a specific action - controlling the arm joints. The `updateAgent()` method, receives the action value from the DQN, and decides to take that action. There are two possible ways to control the arm joints:
+
+ * Velocity Control
+ * Position Control
+
+For both of these types of control, it is possible to increase or decrease either the joint velocity or the joint position, by a small delta value.
+
+The user provides their sensor data (in this case data from a camera) and environmental state, to the `NextAction()` function, which calls the Python script and returns the predicted action, which the user then applies to robot on the Gazebo simulation.
 
 Next the reward is issued in the `NextReward()` function, which provides feedback to the learner from the environment and kicks off the next training iteration that makes the agent learn over time.
+
+In the code, the `ArmPlugin::OnUpdate()` method is executed to issue rewards and train the DQN. It is called upon at every simulation iteration and can be used to update the robot joints, issue end of episode (EOE) rewards, or issue interim rewards based on the desired goal. At EOE, various parameters for the API and the plugin are reset, and the current accuracy of the agent performing the appropriate task is displayed on the terminal.
+
+### LSTMs
+
+The LSTM architecture is a special type of neural network which utilize memory (the previous state), to predict the current output; it keeps track of the long-term memory and the short-term memory, where the short-term memory is the output or the prediction.
+
+![Long Short Term Memory](data/lstm01.png)
+
+For the project, every camera frame, at every simulation iteration, is fed into the DQN and the agent then makes a prediction and carries out an appropriate action. Using LSTMs as part of that network, the training takes into consideration multiple past frames from the camera sensor instead of a single frame.
+
+The network in [DQN.py](python/DQN.py) has been defined such that it is possible to include LSTMs into the network easily.
+
+#### Parameters
+
+```
+// Define DQN API settings
+#define INPUT_WIDTH   64            // Set an environment width
+#define INPUT_HEIGHT  64            // Set an environment height
+#define INPUT_CHANNEL 3             // Set the image channels
+#define OPTIMIZER "RMSprop"         // Set a optimizer
+#define LEARNING_RATE 0.01f         // Set an optimizer learning rate
+#define REPLAY_MEMORY 10000         // Set a replay memory
+#define BATCH_SIZE 32               // Set a batch size
+#define GAMMA 0.9f                  // Set a discount factor
+#define EPS_START 0.9f              // Set a starting greedy value
+#define EPS_END 0.05f               // Set a ending greedy value
+#define EPS_DECAY 200               // Set a greedy decay rate
+#define ALLOW_RANDOM true           // Allow RL agent to make random choices
+#define DEBUG_DQN false             // Turn on or off DQN debug mode
+```
+
+#### hyperparameters
+
+#define USE_LSTM true               // Add memory (LSTM) to network
+#define LSTM_SIZE 256               // Define LSTM size
+
  
 ## Results
 
 I started from scratch with GPU support and no errors were found.
 
 ```
-#define INPUT_WIDTH   32 # 512
-#define INPUT_HEIGHT  32 # 512
+#define INPUT_WIDTH 32
+#define INPUT_HEIGHT 32
 ```
 
 ### Directions
@@ -98,3 +135,4 @@ fatal error: THC/THC.h: No such file or directory
  * [A Beginner's Guide to Deep Reinforcement Learning](https://skymind.ai/wiki/deep-reinforcement-learning)
  * [Deep Learning in a Nutshell: Reinforcement Learning](https://devblogs.nvidia.com/deep-learning-nutshell-reinforcement-learning/)
  * [Gazebo](http://gazebosim.org/)
+ * [pytorch validation](https://github.com/dusty-nv/jetson-reinforcement#verifying-pytorch)
