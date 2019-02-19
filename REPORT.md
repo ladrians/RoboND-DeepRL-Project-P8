@@ -3,16 +3,15 @@ Robotic Deep Reinceforment Learning Project
 
 ## Abstract
 
-The objective of the project is to create a DQN agent and define reward functions to teach a robotic arm to carry out two primary objectives:
-
- * Have any part of the robot arm touch the object of interest, with at least a 90% accuracy.
- * Have only the gripper base of the robot arm touch the object, with at least a 80% accuracy.
+The objective of the project is to create an artificially intelligent agent that learns from interacting with their environment, gathering experience, and a system of rewards with deep reinforcement learning (deep RL). By means of end-to-end neural networks that translate raw pixels into actions, RL-trained agents are capable of exhibiting intuitive behaviors and performing complex tasks.
 
 ## Introduction
 
 In the last few year the usage of Deep Learning in Robotics has exponencially grow because of the potencial it has in solving complex problems.
 
-This project explores the usage of a DQN agent to teach a robotic arm with two tasks.
+To train reinforcement learning agents from virtual robotic simulation in 3D and transfer the agent to a real-world robot has the potencial to drastically change the Robotics landscape. In that sense, reinforcement learners choose the best action for the agent to perform based on environmental state (like camera inputs) and rewards that provide feedback to the agent about it's performance. Reinforcement learning can learn to behave optimally in it's environment given a policy, or task - like obtaining the reward.
+
+This project explores the usage of a discrete Deep Q-Learning (DQN) agent to teach a robotic arm with two tasks.
 
 ## Background
 
@@ -35,7 +34,9 @@ Reinforcement learning represents an agent's attempt to approximate the environm
 
 Where do neural networks fit in? Neural networks are the agent that learns to map state-action pairs to rewards. Like all neural networks, they use coefficients to approximate the function relating inputs to outputs, and their learning consists to finding the right coefficients, or weights, by iteratively adjusting those weights along gradients that promise less error.
 
-This project was entirely resolved using Udacity's workspace and the pytorch framework with [openAI gym environment](https://blog.openai.com/openai-gym-beta/).
+In many scenarios, the state space is significantly complex and multi-dimensional to where neural networks are increasingly used to predict the best action, which is where deep reinforcement learning and GPU acceleration comes into play. With deep reinforcement learning, the agents are typically processing 2D imagery using convolutional neural networks (CNNs), processing inputs that are an order of magnitude more complex than low-dimensional RL, and have the ability to learn "from vision" with the end-to-end network (referred to as "pixels-to-actions").
+
+This project was entirely resolved using Udacity's workspace and the pytorch framework with [openAI gym environment](https://blog.openai.com/openai-gym-beta/) to verify that the deep reinforcement learning algorithms are indeed learning.
 
  * The robotic arm with a gripper attached to it.
  * A camera sensor, to capture images to feed into the DQN.
@@ -54,6 +55,12 @@ The objective is to teach a robotic arm to carry out two primary objectives:
  * Have only the gripper base of the robot arm touch the object, with at least a 80% accuracy.
 
 A DQN agent and reward functions were created to solve the case.
+
+### Agent Behavior
+
+For this case the Agent is a `dqnAgent` which is instanciated on the simulation. The user provides their sensor data (in this case data from a camera) and environmental state, to the `NextAction()` function, which calls the Python script and returns the predicted action, which the user then applies to robot on the Gazebo simulation.
+
+Next the reward is issued in the `NextReward()` function, which provides feedback to the learner from the environment and kicks off the next training iteration that makes the agent learn over time.
  
 ## Results
 
@@ -90,3 +97,4 @@ fatal error: THC/THC.h: No such file or directory
  * [Project Rubric](https://review.udacity.com/#!/rubrics/1439/view)
  * [A Beginner's Guide to Deep Reinforcement Learning](https://skymind.ai/wiki/deep-reinforcement-learning)
  * [Deep Learning in a Nutshell: Reinforcement Learning](https://devblogs.nvidia.com/deep-learning-nutshell-reinforcement-learning/)
+ * [Gazebo](http://gazebosim.org/)
