@@ -151,11 +151,19 @@ The following errors appeared when running the provided environment without GPU 
 make[2]: *** No rule to make target '/opt/conda/lib/libcudart.so', needed by 'x86_64/lib/libjetson-utils.so'.  Stop.
 ```
 
+The following error appears when building the environment using the [initial repository](https://github.com/udacity/RoboND-DeepRL-Project).
+
+```
+fatal error: THC/THC.h: No such file or directory
+```
+
+The solution was to compare the complete project with the one on the VM and apply the differences, the following [commit](https://github.com/ladrians/RoboND-DeepRL-Project-P8/commit/58eb009e0dbe98c3ed11f3bf1aba2ce2cadfa191) solves the issue.
+
 ## Conclusion / Future Work
 
 ### Links:
  * `jetson-reinforcement` developed by [Dustin Franklin](https://github.com/dusty-nv).
- * [watermark](https://www.watermarquee.com/watermark)
+ * [Initial Repository](https://github.com/udacity/RoboND-DeepRL-Project)
  * [watermark](https://www.watermarquee.com/watermark)
  * [This repository](https://github.com/ladrians/RoboND-DeepRL-Project-P8)
  * [Project Rubric](https://review.udacity.com/#!/rubrics/1439/view)
