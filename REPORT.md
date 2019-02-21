@@ -36,7 +36,15 @@ Where do neural networks fit in? Neural networks are the agent that learns to ma
 
 In many scenarios, the state space is significantly complex and multi-dimensional to where neural networks are increasingly used to predict the best action, which is where deep reinforcement learning and GPU acceleration comes into play. With deep reinforcement learning, the agents are typically processing 2D imagery using convolutional neural networks (CNNs), processing inputs that are an order of magnitude more complex than low-dimensional RL, and have the ability to learn "from vision" with the end-to-end network (referred to as "pixels-to-actions").
 
-This project was entirely resolved using Udacity's workspace and the pytorch framework with [openAI gym environment](https://blog.openai.com/openai-gym-beta/) to verify that the deep reinforcement learning algorithms are indeed learning. The [gazebo-arm.world](gazebo/gazebo-arm.world) include three main components which define the environment:
+This project was entirely resolved using Udacity's workspace and the pytorch framework with [openAI gym environment](https://blog.openai.com/openai-gym-beta/) to verify that the deep reinforcement learning algorithms are indeed learning.
+
+[OpenAI Gym](http://gym.openai.com/) is a is a toolkit for reinforcement learning research that has recently gained popularity in the machine learning community. OpenAI Gym focuses on the episodic setting of RL, aiming to maximize the expectation of total reward each episode and to get an acceptable level of performance as fast as possible.
+
+The main problem with Reinceforment Learning in robotics is the high cost per trial, which is not only the economical cost but also the long time needed to perform learning operations. Another known issue is that learning with a real robot in a real environment can be dangerous, specially with flying robots like quad-copters. In order to overcome this difficulties, advanced robotics simulators like [Gazebo](http://gazebosim.org/) have been developed which help saving costs, reducing time and speeding up the simulation.
+
+The architecture consists of three main software blocks: OpenAI Gym, ROS and Gazebo. Environments developed in OpenAI Gym interact with the Robot Operating System, which is the connection between the Gym itself and Gazebo simulator. Gazebo provides a robust physics engine, high-quality graphics, and convenient programmatic and graphical interfaces.
+
+The [gazebo-arm.world](gazebo/gazebo-arm.world) include three main components which define the environment:
 
  * The robotic arm with a gripper attached to it.
  * A camera sensor, to capture images to feed into the DQN.
@@ -78,17 +86,17 @@ The network in [DQN.py](python/DQN.py) has been defined such that it is possible
 
 ```
 // Define DQN API settings
-#define INPUT_WIDTH   64            // Set an environment width
-#define INPUT_HEIGHT  64            // Set an environment height
-#define INPUT_CHANNEL 3             // Set the image channels
-#define OPTIMIZER "RMSprop"         // Set a optimizer
-#define LEARNING_RATE 0.01f         // Set an optimizer learning rate
-#define REPLAY_MEMORY 10000         // Set a replay memory
-#define BATCH_SIZE 32               // Set a batch size
-#define GAMMA 0.9f                  // Set a discount factor
-#define EPS_START 0.9f              // Set a starting greedy value
-#define EPS_END 0.05f               // Set a ending greedy value
-#define EPS_DECAY 200               // Set a greedy decay rate
+#define INPUT_WIDTH   64            // environment width
+#define INPUT_HEIGHT  64            // environment height
+#define INPUT_CHANNEL 3             // image channels
+#define OPTIMIZER "RMSprop"         // optimizer
+#define LEARNING_RATE 0.01f         // optimizer learning rate
+#define REPLAY_MEMORY 5000          // replay memory
+#define BATCH_SIZE 64               // batch size
+#define GAMMA 0.9f                  // discount factor
+#define EPS_START 0.9f              // starting greedy value
+#define EPS_END 0.05f               // ending greedy value
+#define EPS_DECAY 200               // greedy decay rate
 #define ALLOW_RANDOM true           // Allow RL agent to make random choices
 #define DEBUG_DQN false             // Turn on or off DQN debug mode
 ```
@@ -114,14 +122,33 @@ I started from scratch with GPU support and no errors were found.
 
 ### Troubleshooting
 
+The following error appears when trying to compile the project:
+
+```
+from /home/workspace/RoboND-DeepRL-Project/gazebo/gazebo-pkgs/gazebo_grasp_plugin/src/GazeboGraspFix.cpp:2:
+/usr/local/include/ignition/math/MassMatrix3.hh:477:19: error: 'IGN_MASSMATRIX3_DEFAULT_TOLERANCE' was not declared in this scope
+                   IGN_MASSMATRIX3_DEFAULT_TOLERANCE<T>) const
+                   ^
+```
+
+The [solution](https://udacity-robotics.slack.com/archives/CAH20A98W/p1532966091000397?thread_ts=1532656290.000108&cid=CAH20A98W) was to install the following:
+
+```sh
+sudo apt-get install libignition-math2-dev
+```
+
+While executing the `gazebo-arm.sh` script the following error occurs:
+
+```
+[Err] [RenderEngine.cc:749] Unable to create glx visual
+```
+
+The [solution](https://udacity-robotics.slack.com/archives/CAH20A98W/p1526187953000034?thread_ts=1525227352.000087&cid=CAH20A98W) was to run the command `./gazebo-arm.sh` *within* the desktop and not in workspace (which wasn't clear).
+
 The following errors appeared when running the provided environment without GPU support.
 
 ```
 make[2]: *** No rule to make target '/opt/conda/lib/libcudart.so', needed by 'x86_64/lib/libjetson-utils.so'.  Stop.
-```
-
-```
-fatal error: THC/THC.h: No such file or directory
 ```
 
 ## Conclusion / Future Work
