@@ -84,15 +84,21 @@ The network in [DQN.py](python/DQN.py) has been defined such that it is possible
 
 #### Parameters
 
+The `Adam` optimizer (`OPTIMIZER` parameter) was chosen as the sample did not work using the `RMSProp` option. Systematically the following error appeared:
+
 ```
-// Define DQN API settings
-#define INPUT_WIDTH   64            // environment width
-#define INPUT_HEIGHT  64            // environment height
-#define INPUT_CHANNEL 3             // image channels
-#define OPTIMIZER "RMSprop"         // optimizer
-#define LEARNING_RATE 0.01f         // optimizer learning rate
-#define REPLAY_MEMORY 5000          // replay memory
-#define BATCH_SIZE 64               // batch size
+Optimizer Error. Make sure you have choosen the right optimizer and learning rate
+```
+
+The environment width and height (`INPUT_WIDTH` and `INPUT_HEIGHT`) was set to 64x64 based on a 3 image channels (`INPUT_CHANNEL`). The learning rate (`LEARNING_RATE`) values tested were 0.01f and 0.1f with a 5k replay memory (`REPLAY_MEMORY`).
+
+The selected batch size used is 64, the experimentation was done with 64, 128, 256, 512.
+
+The `USE_LSTM` parameter was enabled using a 256 `LSTM_SIZE` value.
+
+The following parameters were not changed:
+
+```
 #define GAMMA 0.9f                  // discount factor
 #define EPS_START 0.9f              // starting greedy value
 #define EPS_END 0.05f               // ending greedy value
@@ -100,12 +106,6 @@ The network in [DQN.py](python/DQN.py) has been defined such that it is possible
 #define ALLOW_RANDOM true           // Allow RL agent to make random choices
 #define DEBUG_DQN false             // Turn on or off DQN debug mode
 ```
-
-#### hyperparameters
-
-#define USE_LSTM true               // Add memory (LSTM) to network
-#define LSTM_SIZE 256               // Define LSTM size
-
  
 ## Results
 
@@ -113,16 +113,13 @@ I started from scratch with GPU support and no errors were found. Once the simul
 
 ![Running the environment in Gazebo](data/gazebo01.png)
 
-Parameters are set
-
-```
-#define INPUT_WIDTH 32
-#define INPUT_HEIGHT 32
-```
-
 ### Directions
 
 ## Discussion
+
+The initial parameter configuration was taken using the original [Nvidia ArmPlugin](https://github.com/dusty-nv/jetson-reinforcement/blob/master/gazebo/ArmPlugin.cpp) configuration.
+
+Based on that it created the initial working environment to iterate and fine tune parameters.
 
 ### Troubleshooting
 
@@ -165,7 +162,7 @@ The solution was to compare the complete project with the one on the VM and appl
 
 ## Conclusion / Future Work
 
-Deep Reinforcement Learning is a new field and an active area of research. It promises to provide an end-to-end, `pixels to actions` solution for many robotics problems. The deeper understanding of surroundings that can be achieved with RL agents: an agent can perform experiments to better `understand` its complex and changing environment, which leads to more nuanced and human-like behavior by the robot.
+Deep Reinforcement Learning is a new field and an active area of research. It promises to provide an end-to-end, `pixels to actions` solution for many robotics problems. The deeper understanding of surroundings that can be achieved with RL agents: an agent can perform experiments to better `understand` its complex and changing environment, which leads to more nuanced and human-like behavior by the robot. Agents using deep reinforcement learning (deep RL) methods have shown tremendous success in learning complex behaviour skills and solving challenging control tasks in high-dimensional raw sensory state-space.
 
 There are other alternaves to DQN such as the [Sarsa algorithm](https://www.cse.unsw.edu.au/~cs9417ml/RL1/algorithms.html). The major difference between Sarsa and Q-Learning, is that the maximum reward for the next state is not necessarily used for updating the Q-values (learning table). Instead, a new action, and therefore reward, is selected using the same policy that determined the original action. This is how Sarsa is able to take into account the control policy of the agent during learning. It means that information needs to be stored longer before the action values can be updated, but also means that our robot is going to take risky actions much frequently.
 
