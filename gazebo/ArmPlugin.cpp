@@ -166,12 +166,12 @@ bool ArmPlugin::createAgent()
 
 	/*
 	/ Create DQN Agent
-	*/	
-    agent = dqnAgent::Create(INPUT_WIDTH, INPUT_HEIGHT, 
+	*/
+	agent = dqnAgent::Create(INPUT_WIDTH, INPUT_HEIGHT, 
                        NUM_CHANNELS, NUM_ACTIONS, OPTIMIZER, 
                        LEARNING_RATE, REPLAY_MEMORY, BATCH_SIZE, 
                        GAMMA, EPS_START, EPS_END, EPS_DECAY,
-                       USE_LSTM, LSTM_SIZE, ALLOW_RANDOM, DEBUG_DQN);	
+                       USE_LSTM, LSTM_SIZE, ALLOW_RANDOM, DEBUG_DQN);
 
 	if( !agent )
 	{
@@ -273,7 +273,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 			rewardHistory = REWARD_WIN;
 			newReward = true;
 			endEpisode = true;
-			return;          
+			return;
 		}
 		else
 		{
@@ -547,8 +547,8 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 	{
 		printf("ArmPlugin - triggering EOE, episode has exceeded %i frames\n", maxEpisodeLength);
 		rewardHistory = REWARD_LOSS;
-		newReward     = true;
-		endEpisode    = true;
+		newReward = true;
+		endEpisode = true;
 	}
 
 	// if an EOE reward hasn't already been issued, compute an intermediary reward
@@ -588,8 +588,8 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			if(DEBUG){printf("GROUND CONTACT, EOE\n");}
 
 			rewardHistory = REWARD_LOSS;
-			newReward     = true;
-			endEpisode    = true;
+			newReward = true;
+			endEpisode = true;
 		}
 		
 		/*
@@ -606,15 +606,15 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			
 			if( episodeFrames > 1 )
 			{
-				const float distDelta  = lastGoalDistance - distGoal;
+				const float distDelta = lastGoalDistance - distGoal;
 				const float distThresh = 1.5f; // maximum distance to the goal
-				const float epsilon    = 0.001f; // minimum pos/neg change in position
-				const float movingAvg  = 0.0f; //0.9f;
+				const float epsilon = 0.001f; // minimum pos/neg change in position
+				const float movingAvg = 0.0f; //0.9f;
 
 				// compute the smoothed moving average of the delta of the distance to the goal
-				avgGoalDelta  = (avgGoalDelta * movingAvg) + (distDelta * (1.0f - movingAvg));
-				rewardHistory = avgGoalDelta * REWARD_MULTIPLIER;	// exp(-GAMMA_FALLOFF * distGoal) * 0.1f;
-				newReward     = true;              
+				avgGoalDelta = (avgGoalDelta * movingAvg) + (distDelta * (1.0f - movingAvg));
+				rewardHistory = avgGoalDelta * REWARD_MULTIPLIER; // exp(-GAMMA_FALLOFF * distGoal) * 0.1f;
+				newReward = true;
 			}
 
 			lastGoalDistance = distGoal;
