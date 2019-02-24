@@ -42,7 +42,7 @@
 #define LEARNING_RATE 0.1f
 #define REPLAY_MEMORY 10000
 #define BATCH_SIZE 32
-#define USE_LSTM true
+#define USE_LSTM false
 #define LSTM_SIZE 256
 #define NUM_CHANNELS 3
 
@@ -74,10 +74,6 @@
 
 // Lock base rotation DOF (Add dof in header file if off)
 #define LOCKBASE true
-
-// Extra parameters
-#define IMAGE_TOPIC "/gazebo/arm_world/camera/link/camera/image"
-#define COLLISION_TOPIC "/gazebo/arm_world/tube/tube_link/my_contact"
 
 
 namespace gazebo
@@ -144,7 +140,7 @@ void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 	/*
 	/ Subscribe to camera topic
 	*/
-	cameraSub = cameraNode->Subscribe(IMAGE_TOPIC, &ArmPlugin::onCameraMsg, this);
+	cameraSub = cameraNode->Subscribe("/gazebo/arm_world/camera/link/camera/image", &ArmPlugin::onCameraMsg, this);
 
 	// Create our node for collision detection
 	collisionNode->Init();
@@ -152,7 +148,7 @@ void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 	/*
 	/ Subscribe to prop collision topic
 	*/
-	collisionSub = collisionNode->Subscribe(COLLISION_TOPIC, &ArmPlugin::onCollisionMsg, this);
+	collisionSub = collisionNode->Subscribe("/gazebo/arm_world/tube/tube_link/my_contact", &ArmPlugin::onCollisionMsg, this);
 	// Listen to the update event. This event is broadcast every simulation iteration.
 	this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&ArmPlugin::OnUpdate, this, _1));
 }
