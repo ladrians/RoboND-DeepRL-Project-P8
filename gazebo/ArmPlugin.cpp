@@ -267,7 +267,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		/
 		*/
 
-		bool collisionCheck = ( ((strcmp(contacts->contact(i).collision1().c_str(),COLLISION_ITEM)==0) && (strcmp(contacts->contact(i).collision2().c_str(),COLLISION_POINT)==0));
+		bool collisionCheck = ((strcmp(contacts->contact(i).collision1().c_str(),COLLISION_ITEM)==0) && (strcmp(contacts->contact(i).collision2().c_str(),COLLISION_POINT)==0));
 		if (collisionCheck)
 		{
 			rewardHistory = REWARD_WIN;
