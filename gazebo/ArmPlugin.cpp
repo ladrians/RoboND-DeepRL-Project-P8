@@ -41,8 +41,8 @@
 #define LEARNING_RATE 0.1f // 0.01f
 #define REPLAY_MEMORY 5000
 #define BATCH_SIZE 64
-#define USE_LSTM false // true
-#define LSTM_SIZE 128
+#define USE_LSTM true
+#define LSTM_SIZE 256
 #define NUM_CHANNELS 3
 #define NUM_ACTIONS 2
 
