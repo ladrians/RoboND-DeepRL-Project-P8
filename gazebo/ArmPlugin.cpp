@@ -356,6 +356,12 @@ bool ArmPlugin::updateAgent()
 	*/
 	float joint = 0.0; // Set joint position based on whether action is even or odd.
 
+	if ( action % 2 == 0){
+		joint = ref[action/2] + actionJointDelta;
+	}else{
+		joint = ref[action/2] - actionJointDelta;
+	}
+
 	// limit the joint to the specified range
 	if( joint < JOINT_MIN )
 		joint = JOINT_MIN;
@@ -595,7 +601,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		
 		if(!checkGroundContact)
 		{
-			const float distGoal = 0; // compute the reward from distance to the goal
+			const float distGoal = BoxDistance(gripBBox,propBBox); // compute the reward from distance to the goal
 
 			if(DEBUG){printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);}
 
@@ -605,7 +611,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				const float distDelta = lastGoalDistance - distGoal;
 				const float distThresh = 1.5f; // maximum distance to the goal
 				const float epsilon = 0.001f; // minimum pos/neg change in position
-				const float movingAvg = 0.0f; //0.9f;
+				const float movingAvg = 0.9f;
 
 				// compute the smoothed moving average of the delta of the distance to the goal
 				avgGoalDelta = (avgGoalDelta * movingAvg) + (distDelta * (1.0f - movingAvg));
