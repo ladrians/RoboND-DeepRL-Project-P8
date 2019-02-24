@@ -3,7 +3,7 @@ Robotic Deep Reinceforment Learning Project
 
 ## Abstract
 
-The objective of the project is to create an artificially intelligent agent that learns from interacting with their environment, gathering experience, and a system of rewards with deep reinforcement learning (deep RL). By means of end-to-end neural networks that translate raw pixels into actions, RL-trained agents are capable of exhibiting intuitive behaviors and performing complex tasks.
+The objective of the project is to create an artificially intelligent agent that learns from interacting with their environment, gathering experience, and a system of rewards with deep reinforcement learning (deep RL). By means of end-to-end neural networks that translate raw pixels into actions, RL-trained agents are capable of exhibiting intuitive behaviors and performing complex tasks. The larger goal is to develop general-purpose AI systems that can interact and learn from the world as humans do.
 
 ## Introduction
 
@@ -160,6 +160,14 @@ fatal error: THC/THC.h: No such file or directory
 The solution was to compare the complete project with the one on the VM and apply the differences, the following [commit](https://github.com/ladrians/RoboND-DeepRL-Project-P8/commit/58eb009e0dbe98c3ed11f3bf1aba2ce2cadfa191) solves the issue.
 
 ## Conclusion / Future Work
+
+Deep Reinforcement Learning is a new field and an active area of research. It promises to provide an end-to-end, `pixels to actions` solution for many robotics problems. The deeper understanding of surroundings that can be achieved with RL agents: an agent can perform experiments to better `understand` its complex and changing environment, which leads to more nuanced and human-like behavior by the robot.
+
+There are other alternaves to DQN such as the [Sarsa algorithm](https://www.cse.unsw.edu.au/~cs9417ml/RL1/algorithms.html). The major difference between Sarsa and Q-Learning, is that the maximum reward for the next state is not necessarily used for updating the Q-values (learning table). Instead, a new action, and therefore reward, is selected using the same policy that determined the original action. This is how Sarsa is able to take into account the control policy of the agent during learning. It means that information needs to be stored longer before the action values can be updated, but also means that our robot is going to take risky actions much frequently.
+
+Another possibility is to experiment with the [Asynchronous Advantage Actor-Critic(A3C) algorithm](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2). This algorithm eclipses DQN because it is faster and more robust. It builds on actor-critic with the innovations of multiple `asynchronous` workers as well as an `advantage` feature.
+
+Finally, training a robot through trial and error in simulation cannot fully prepare it for a real world environment. While training in a simulator costs time and compute power, it doesn't involve the physical risk that occurs from failures with a real world mobile robot. Advances in photo-realistic generation of realistic simulation environments may hold promise in this area.
 
 ### Links:
  * `jetson-reinforcement` developed by [Dustin Franklin](https://github.com/dusty-nv).
