@@ -109,7 +109,11 @@ The network in [DQN.py](python/DQN.py) has been defined such that it is possible
  
 ## Results
 
-I started from scratch with GPU support and no errors were found.
+I started from scratch with GPU support and no errors were found. Once the simulation is started the following is displayed:
+
+![Running the environment in Gazebo](data/gazebo01.png)
+
+Parameters are set
 
 ```
 #define INPUT_WIDTH 32
