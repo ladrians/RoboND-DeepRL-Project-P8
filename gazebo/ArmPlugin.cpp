@@ -43,7 +43,7 @@
 #define REPLAY_MEMORY 10000
 #define BATCH_SIZE 32
 #define USE_LSTM false
-#define LSTM_SIZE 256
+#define LSTM_SIZE 128
 #define NUM_CHANNELS 3
 
 /*
@@ -51,9 +51,9 @@
 /
 */
 
-#define REWARD_WIN  250.0f
-#define REWARD_LOSS -250.0f
-#define REWARD_MULTIPLIER 150.0f
+#define REWARD_WIN  300.0f
+#define REWARD_LOSS -300.0f
+#define REWARD_MULTIPLIER 200.0f
 #define GAMMA_FALLOFF 0.35f
 
 // Define Object Names
@@ -275,7 +275,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		{
 			rewardHistory = REWARD_LOSS;
 			newReward = true;
-			endEpisode = true;
+			endEpisode = false;
 		}
 	}
 }
@@ -611,11 +611,12 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				const float distDelta = lastGoalDistance - distGoal;
 				const float distThresh = 1.5f; // maximum distance to the goal
 				const float epsilon = 0.001f; // minimum pos/neg change in position
-				const float movingAvg = 0.9f;
+				const float movingAvg = 0.8f;
 
 				// compute the smoothed moving average of the delta of the distance to the goal
 				avgGoalDelta = (avgGoalDelta * movingAvg) + (distDelta * (1.0f - movingAvg));
-				rewardHistory = avgGoalDelta * REWARD_MULTIPLIER; // exp(-GAMMA_FALLOFF * distGoal) * 0.1f;
+				rewardHistory = avgGoalDelta * REWARD_MULTIPLIER;
+				//rewardHistory = exp(-GAMMA_FALLOFF * distGoal) * 0.1f;
 				newReward = true;
 			}
 
