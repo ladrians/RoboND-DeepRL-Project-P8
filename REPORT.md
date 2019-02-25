@@ -7,9 +7,9 @@ The objective of the project is to create an artificially intelligent agent that
 
 ## Introduction
 
-In the last few year the usage of Deep Learning in Robotics has exponencially grow because of the potencial it has in solving complex problems.
+In the last few years the usage of Deep Learning in Robotics has exponentially grow because of the potential it has in solving complex problems.
 
-To train reinforcement learning agents from virtual robotic simulation in 3D and transfer the agent to a real-world robot has the potencial to drastically change the Robotics landscape. In that sense, reinforcement learners choose the best action for the agent to perform based on environmental state (like camera inputs) and rewards that provide feedback to the agent about it's performance. Reinforcement learning can learn to behave optimally in it's environment given a policy, or task - like obtaining the reward.
+To train reinforcement learning agents from virtual robotic simulation in 3D and transfer the agent to a real-world robot has the potential to drastically change the Robotics landscape. In that sense, reinforcement learners choose the best action for the agent to perform based on environmental state (like camera inputs) and rewards that provide feedback to the agent about its performance. Reinforcement learning can learn to behave optimally in its environment given a policy, or task - like obtaining the reward.
 
 This project explores the usage of a discrete Deep Q-Learning (DQN) agent to teach a robotic arm with two tasks.
 
@@ -38,9 +38,9 @@ In many scenarios, the state space is significantly complex and multi-dimensiona
 
 This project was entirely resolved using Udacity's workspace and the pytorch framework with [openAI gym environment](https://blog.openai.com/openai-gym-beta/) to verify that the deep reinforcement learning algorithms are indeed learning.
 
-[OpenAI Gym](http://gym.openai.com/) is a is a toolkit for reinforcement learning research that has recently gained popularity in the machine learning community. OpenAI Gym focuses on the episodic setting of RL, aiming to maximize the expectation of total reward each episode and to get an acceptable level of performance as fast as possible.
+[OpenAI Gym](http://gym.openai.com/) is a toolkit for reinforcement learning research that has recently gained popularity in the machine learning community. OpenAI Gym focuses on the episodic setting of RL, aiming to maximize the expectation of total reward each episode and to get an acceptable level of performance as fast as possible.
 
-The main problem with Reinceforment Learning in robotics is the high cost per trial, which is not only the economical cost but also the long time needed to perform learning operations. Another known issue is that learning with a real robot in a real environment can be dangerous, specially with flying robots like quad-copters. In order to overcome this difficulties, advanced robotics simulators like [Gazebo](http://gazebosim.org/) have been developed which help saving costs, reducing time and speeding up the simulation.
+The main problem with Reinceforment Learning in robotics is the high cost per trial, which is not only the economical cost but also the long time needed to perform learning operations. Another known issue is that learning with a real robot in a real environment can be dangerous, especially with flying robots like quad-copters. In order to overcome this difficulties, advanced robotics simulators like [Gazebo](http://gazebosim.org/) have been developed which help saving costs, reducing time and speeding up the simulation.
 
 The architecture consists of three main software blocks: OpenAI Gym, ROS and Gazebo. Environments developed in OpenAI Gym interact with the Robot Operating System, which is the connection between the Gym itself and Gazebo simulator. Gazebo provides a robust physics engine, high-quality graphics, and convenient programmatic and graphical interfaces.
 
@@ -59,7 +59,7 @@ A DQN agent and reward functions were created to solve the case.
 
 ### Agent Behavior
 
-For this case the Agent is a `dqnAgent` which is instanciated on the simulation. The DQN agent is discrete so the network selects one output for every frame. This output (action value) can then be mapped to a specific action - controlling the arm joints. The `updateAgent()` method, receives the action value from the DQN, and decides to take that action. There are two possible ways to control the arm joints:
+For this case the Agent is a `dqnAgent` which is instantiated on the simulation. The DQN agent is discrete so the network selects one output for every frame. This output (action value) can then be mapped to a specific action - controlling the arm joints. The `updateAgent()` method, receives the action value from the DQN, and decides to take that action. There are two possible ways to control the arm joints:
 
  * Velocity Control
  * Position Control
@@ -70,7 +70,7 @@ The user provides their sensor data (in this case data from a camera) and enviro
 
 Next the reward is issued in the `NextReward()` function, which provides feedback to the learner from the environment and kicks off the next training iteration that makes the agent learn over time.
 
-In the code, the `ArmPlugin::OnUpdate()` method is executed to issue rewards and train the DQN. It is called upon at every simulation iteration and can be used to update the robot joints, issue end of episode (EOE) rewards, or issue interim rewards based on the desired goal. At EOE, various parameters for the API and the plugin are reset, and the current accuracy of the agent performing the appropriate task is displayed on the terminal.
+In the code, the `ArmPlugin::OnUpdate()` method is executed to issue rewards and train the DQN. It is called upon at every simulation iteration and can be used to update the robot joints, issue end of episode (EOE) rewards, or issue interim rewards based on the desired goal. At EOE, various parameters for the API and the plug-in are reset, and the current accuracy of the agent performing the appropriate task is displayed on the terminal.
 
 ### LSTMs
 
@@ -84,13 +84,11 @@ The network in [DQN.py](python/DQN.py) has been defined such that it is possible
 
 #### Parameters
 
-Initially `RMSprop` optimized was tested but then changed to `Adam`; as it can be viewed as a combination of `RMSprop` and `momentum`. `RMSprop` contributes the exponentially decaying average of past squared gradients, while `momentum` accounts for the exponentially decaying average of past gradients.
+Two optimizers were tested; initially `Adam` optimizer but then changed to `RMSprop`. `Adam` optimizer can be viewed as a combination of `RMSprop` and `momentum`. `RMSprop` contributes the exponentially decaying average of past squared gradients, while `momentum` accounts for the exponentially decaying average of past gradients. Switching between optimizers didn't get any reasonable improvement over the other; `RMSprop` was selected.
 
-The environment width and height (`INPUT_WIDTH` and `INPUT_HEIGHT`) was set to 64x64 based on a 3 image channels (`INPUT_CHANNEL`). The learning rate (`LEARNING_RATE`) values tested were 0.01f and 0.1f with a 5k to 20k replay memory (`REPLAY_MEMORY`).
+The environment width and height (`INPUT_WIDTH` and `INPUT_HEIGHT`) was set to 128x128 based on a 3 image channels (`INPUT_CHANNEL`). The learning rate (`LEARNING_RATE`) values tested were 0.01f and 0.1f.
 
-The selected batch size used is 64, the experimentation was done with 64, 128, 256, 512.
-
-The `USE_LSTM` parameter was enabled using a 256 `LSTM_SIZE` value.
+The `USE_LSTM` parameter was disabled in both cases; when enabled it got erratic behavior.
 
 The following parameters were not changed:
 
@@ -109,11 +107,32 @@ Once the simulation is started the following is displayed:
 
 ![Running the environment in Gazebo](data/gazebo01.png)
 
-For the first objective; the robot needs to touch any part of the object of interest with at least a 90% accuracy. The LEARNING_RATE was 0.1 with REPLAY_MEMORY at 1000.
+For the first objective; the robot needs to touch any part of the object of interest with at least a 90% accuracy. The `LEARNING_RATE` was 0.1 with `REPLAY_MEMORY` at 10000. The selected `BATCH_SIZE` was 64. The selected reward parameters:
+
+ * `REWARD_WIN`: 100.0f
+ * `REWARD_LOSS`: -100.0f
+ * `REWARD_MULTIPLIER`: 25.0f
 
 ![Task One](data/task01.png)
 
-For objective 2 where only the gripper base needs to touch the object of interest with at least a 80% accuracy. The LEARNING_RATE was decreased to 0.01 due to the higher REPLAY_MEMORY set at 20000. The higher REPLAY_MEMORY was used so as to allow for more discrete learning, due to the smaller surface area required to achieve a collision to meet objectives.
+The complete parameter list can be validated in the following [commit](https://github.com/ladrians/RoboND-DeepRL-Project-P8/blob/ffaa84227bc74a8468d40bdbb5660455ef737368/gazebo/ArmPlugin.cpp).
+
+For objective 2, only the gripper base needs to touch the object of interest with at least a 80% accuracy. The `LEARNING_RATE` was kept with the same to 0.1 value, the `REPLAY_MEMORY` set at 10000. The selected `BATCH_SIZE` was decreased to 32; experimentation was done with 64, 128, 256, 512.
+
+The environment width and height (`INPUT_WIDTH` and `INPUT_HEIGHT`) was decreased to 64x64 to take into account the smaller contact area for the gripper. The selected reward parameters changed:
+
+ * `REWARD_WIN`: 300.0f
+ * `REWARD_LOSS`: -300.0f
+ * `REWARD_MULTIPLIER`: 200.0f
+
+In the same way, the collision checking parameter is more specific adding new restrictions (collision between the arm and object):
+
+```
+(strcmp(contacts->contact(i).collision1().c_str(),COLLISION_ITEM) ==0) &&
+(strcmp(contacts->contact(i).collision2().c_str(),COLLISION_POINT)==0)
+```
+
+The strategy followed was to consider a narrower area of interest, greater values for wins and losses and to better reward the interim rewards where the measured distance is close to the object.
 
 ![Task Two](data/task02.png)
 
@@ -121,23 +140,15 @@ The `EPS_Start` and `EPS_end` parameters are the start and end values of the exp
 
 When the reward function is appropriate, a smaller `EPS_DECAY` value can be used; the robot arm will learn more quickly.
 
-### Directions
+The complete parameter list for the second step can be validated in the following [commit](https://github.com/ladrians/RoboND-DeepRL-Project-P8/blob/574b572b3444df1319a49de0ebf9610954564931/gazebo/ArmPlugin.cpp).
 
 ## Discussion
 
 The initial parameter configuration was taken using the original [Nvidia ArmPlugin](https://github.com/dusty-nv/jetson-reinforcement/blob/master/gazebo/ArmPlugin.cpp) configuration.
 
-Based on that it created the initial working environment to iterate and fine tune parameters as previously detailed.
+Based on that, it created the initial working environment to iterate and fine tune parameters as previously detailed.
 
-The initial rewards are set as follows:
-
-```
-#define REWARD_WIN  250.0f
-#define REWARD_LOSS -250.0f
-#define REWARD_MULTIPLIER 150.0f
-```
-
-Then the reward is smoothed taking into accoutn the delta of the distance to the goal using Udacity's suggestion:
+The reward is smoothed taking into account the delta of the distance to the goal using Udacity's suggestion:
 
 ```
 avgGoalDelta = (avgGoalDelta * movingAvg) + (distDelta * (1.0f - movingAvg));
@@ -148,13 +159,6 @@ newReward = true;
 When defining the contact between the gripper and the ground, the `bool checkGroundContact` variables is calculated as `(gripBBox.min.z <= groundContact)` or `(gripBBox.max.z <= groundContact)`.
 
 If the gripper hits the ground plus the threshold, the episode should end since it could be dangerous or could damage the robot; the `endEpisode` variable is always set to `true`.
-
-To check the collision between the arm and object, the following comparison is done:
-
-```
-(strcmp(contacts->contact(i).collision1().c_str(),COLLISION_ITEM) ==0) &&
-(strcmp(contacts->contact(i).collision2().c_str(),COLLISION_POINT)==0)
-```
 
 For the project, the default `position joint control` was used, there was no experimentation using `velocity control`.
 
@@ -207,9 +211,9 @@ No session for pid <number>
 
 ## Conclusion / Future Work
 
-Deep Reinforcement Learning is a new field and an active area of research. It promises to provide an end-to-end, `pixels to actions` solution for many robotics problems. The deeper understanding of surroundings that can be achieved with RL agents: an agent can perform experiments to better `understand` its complex and changing environment, which leads to more nuanced and human-like behavior by the robot. Agents using deep reinforcement learning (deep RL) methods have shown tremendous success in learning complex behaviour skills and solving challenging control tasks in high-dimensional raw sensory state-space.
+Deep Reinforcement Learning is a new field and an active area of research. It promises to provide an end-to-end, `pixels to actions` solution for many robotics problems. The deeper understanding of surroundings that can be achieved with RL agents: an agent can perform experiments to better `understand` its complex and changing environment, which leads to more nuanced and human-like behavior by the robot. Agents using deep reinforcement learning (deep RL) methods have shown tremendous success in learning complex behavior skills and solving challenging control tasks in high-dimensional raw sensory state-space.
 
-There are other alternaves to DQN such as the [Sarsa algorithm](https://www.cse.unsw.edu.au/~cs9417ml/RL1/algorithms.html) (state-action-reward-state-action). The major difference between Sarsa and Q-Learning, is that the maximum reward for the next state is not necessarily used for updating the Q-values (learning table). Instead, a new action, and therefore reward, is selected using the same policy that determined the original action. This is how Sarsa is able to take into account the control policy of the agent during learning. It means that information needs to be stored longer before the action values can be updated, but also means that our robot is going to take risky actions much frequently.
+There are other alternatives to DQN such as the [Sarsa algorithm](https://www.cse.unsw.edu.au/~cs9417ml/RL1/algorithms.html) (state-action-reward-state-action). The major difference between Sarsa and Q-Learning, is that the maximum reward for the next state is not necessarily used for updating the Q-values (learning table). Instead, a new action, and therefore reward, is selected using the same policy that determined the original action. This is how Sarsa is able to take into account the control policy of the agent during learning. It means that information needs to be stored longer before the action values can be updated, but also means that our robot is going to take risky actions much frequently.
 
 Another possibility is to experiment with the [Asynchronous Advantage Actor-Critic(A3C) algorithm](https://medium.com/emergent-future/simple-reinforcement-learning-with-tensorflow-part-8-asynchronous-actor-critic-agents-a3c-c88f72a5e9f2). This algorithm eclipses DQN because it is faster and more robust. It builds on actor-critic with the innovations of multiple `asynchronous` workers as well as an `advantage` feature.
 
