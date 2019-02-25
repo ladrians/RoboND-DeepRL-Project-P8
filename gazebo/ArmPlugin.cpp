@@ -35,13 +35,13 @@
 /
 */
 
-#define INPUT_WIDTH   64
-#define INPUT_HEIGHT  64
+#define INPUT_WIDTH   128
+#define INPUT_HEIGHT  128
 #define NUM_ACTIONS DOF*2
 #define OPTIMIZER "RMSprop"
 #define LEARNING_RATE 0.1f
-#define REPLAY_MEMORY 10000
-#define BATCH_SIZE 32
+#define REPLAY_MEMORY 1000
+#define BATCH_SIZE 64
 #define USE_LSTM false
 #define LSTM_SIZE 128
 #define NUM_CHANNELS 3
@@ -51,9 +51,9 @@
 /
 */
 
-#define REWARD_WIN  300.0f
-#define REWARD_LOSS -300.0f
-#define REWARD_MULTIPLIER 200.0f
+#define REWARD_WIN  100.0f
+#define REWARD_LOSS -100.0f
+#define REWARD_MULTIPLIER 25.0f
 #define GAMMA_FALLOFF 0.35f
 
 // Define Object Names
@@ -263,7 +263,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		/
 		*/
 
-		bool collisionCheck = ((strcmp(contacts->contact(i).collision1().c_str(),COLLISION_ITEM)==0) && (strcmp(contacts->contact(i).collision2().c_str(),COLLISION_POINT)==0));
+		bool collisionCheck = ((strcmp(contacts->contact(i).collision1().c_str(),COLLISION_ITEM)==0));// && (strcmp(contacts->contact(i).collision2().c_str(),COLLISION_POINT)==0));
 		if (collisionCheck)
 		{
 			rewardHistory = REWARD_WIN;
@@ -611,7 +611,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				const float distDelta = lastGoalDistance - distGoal;
 				const float distThresh = 1.5f; // maximum distance to the goal
 				const float epsilon = 0.001f; // minimum pos/neg change in position
-				const float movingAvg = 0.8f;
+				const float movingAvg = 0.6f;
 
 				// compute the smoothed moving average of the delta of the distance to the goal
 				avgGoalDelta = (avgGoalDelta * movingAvg) + (distDelta * (1.0f - movingAvg));
